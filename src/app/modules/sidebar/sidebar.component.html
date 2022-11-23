@@ -1,0 +1,17 @@
+<div class="sidebar" [ngClass]="{ expanded: isExpanded }" *ngIf="isExpanded">
+  <div class="header">
+    <div class="toggle" (click)="handleSidebarToggle()">
+      <span class="chevron"></span>
+    </div>
+  </div>
+  <div class="header">Encuentra el Clima de tu Ciudad</div>
+  <div class="content">
+    <input type="text" class="form-control" [(ngModel)]="buscar" />
+  </div>
+  <br />
+  <div class="content">
+    <button type="button" class="btn btn-info form-control" (click)="search()">
+      Buscar tu Ciudad
+    </button>
+  </div>
+</div>

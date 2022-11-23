@@ -1,0 +1,99 @@
+<header>
+  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+    <div class="position-sticky">
+      <app-sidebar
+        [isExpanded]="sidebarExpanded"
+        (toggleSidebar)="sidebarExpanded = !sidebarExpanded"
+        (weatherData)="processData($event)"
+      ></app-sidebar>
+    </div>
+  </nav>
+
+  <nav
+    id="main-navbar"
+    class="navbar navbar-expand-lg navbar-light bg-white fixed-top"
+  >
+    <h5>Weather App</h5>
+  </nav>
+</header>
+
+<main style="margin-top: 58px" *ngIf="showInformation">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Nombre</th>
+        <th scope="col">País</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let item of weatherAll | slice: (page - 1) * pageSize:page * pageSize;
+          index as i
+        "
+      >
+        <th scope="row">{{ (page - 1) * pageSize + i + 1 }}</th>
+        <td>
+          {{ item.name }}
+        </td>
+        <td>{{ item.sys?.country }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn form-control"
+            (click)="processSingleCity(content, item.id)"
+          >
+            Clima de Hoy
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ngb-pagination
+    [collectionSize]="collectionSize"
+    [(page)]="page"
+    [maxSize]="5"
+    [boundaryLinks]="true"
+    [pageSize]="pageSize"
+    class="d-flex justify-content-center"
+  ></ngb-pagination>
+</main>
+
+<main *ngIf="!showInformation">
+  <h2><span>Sin Información</span></h2>
+</main>
+
+<ng-template #content let-modal>
+  <div *ngFor="let item of weatherSingle">
+    <div class="modal-title">
+      <h2>Clima de {{ item.name }}</h2>
+    </div>
+    <div class="modal-body">
+      <div class="flex-row">
+        <div class="temp">
+          <span class="big-text"
+            >{{ item.main?.temp | number: "0.0-0" }}° C</span
+          >
+          <span>Sensación de </span>
+          <span>{{ item.main?.feels_like | number: "0.0-0" }}° C</span>
+        </div>
+        <div class="outlook">
+          <img [src]="item.image" class="image" />
+          <span>{{ item.description | titlecase }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="modal.close('Salir')"
+      >
+        Salir
+      </button>
+    </div>
+  </div>
+</ng-template>
